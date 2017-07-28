@@ -5,9 +5,14 @@ class SceneTitle extends GuaScene {
             var s = Scene(game)
             game.replaceScene(s)
         })
+        game.registerAction('b', function(){
+            var s = SceneEditor(game)
+            game.replaceScene(s)
+        })
     }
     draw() {
         // draw labels
-        this.game.context.fillText('按 k 开始游戏', 100, 190)
+        this.game.context.fillText('按 k 开始游戏', 150, 120)
+        this.game.context.fillText('按 b 编辑关卡', 150, 150)
     }
 }
