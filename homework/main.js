@@ -6,6 +6,14 @@ var loadLevelsFromDb = function () {
     return levels
 }
 
+var saveLevelsToDb = function (level, block, x, y) {
+    var levels = loadLevelsFromDb()
+    level -= 1
+    levels[level][block][0] = x
+    levels[level][block][1] = y
+    localStorage.levels = JSON.stringify(levels)
+}
+
 var loadLevel = function(game, n) {
     n = n - 1
     var levels = loadLevelsFromDb()
@@ -32,6 +40,7 @@ var enableDebugMode = function(game, enable) {
         } else if ('1234567'.includes(k)) {
             // 为了 debug 临时加的载入关卡功能
             game.scene.blocks = loadLevel(game, Number(k))
+            game.scene.level = Number(k)
         }
     })
     // 控制速度
