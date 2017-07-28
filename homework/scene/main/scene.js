@@ -1,6 +1,7 @@
 var Scene = function(game) {
     var s = {
         game: game,
+        blocks: [],
     }
     // 初始化
     var paddle = Paddle(game)
@@ -8,7 +9,7 @@ var Scene = function(game) {
 
     var score = 0
 
-    var blocks = loadLevel(game, 1)
+    s.blocks = loadLevel(game, 1)
 
     game.registerAction('a', function(){
         paddle.moveLeft()
@@ -28,8 +29,8 @@ var Scene = function(game) {
         game.drawImage(paddle)
         game.drawImage(ball)
         // draw blocks
-        for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i]
+        for (var i = 0; i < s.blocks.length; i++) {
+            var block = s.blocks[i]
             if (block.alive) {
                 game.drawImage(block)
             }
@@ -55,8 +56,8 @@ var Scene = function(game) {
             ball.反弹()
         }
         // 判断 ball 和 blocks 相撞
-        for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i]
+        for (var i = 0; i < s.blocks.length; i++) {
+            var block = s.blocks[i]
             if (block.collide(ball)) {
                 // log('block 相撞')
                 block.kill()

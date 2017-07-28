@@ -22,7 +22,7 @@ var enableDebugMode = function(game, enable) {
             window.paused = !window.paused
         } else if ('1234567'.includes(k)) {
             // 为了 debug 临时加的载入关卡功能
-            blocks = loadLevel(game, Number(k))
+            game.scene.blocks = loadLevel(game, Number(k))
         }
     })
     // 控制速度
