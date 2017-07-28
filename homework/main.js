@@ -1,5 +1,14 @@
+var loadLevelsFromDb = function () {
+    if (localStorage.levels === undefined) {
+        localStorage.levels = JSON.stringify(initLevels)
+    }
+    var levels = JSON.parse(localStorage.levels)
+    return levels
+}
+
 var loadLevel = function(game, n) {
     n = n - 1
+    var levels = loadLevelsFromDb()
     var level = levels[n]
     var blocks = []
     for (var i = 0; i < level.length; i++) {

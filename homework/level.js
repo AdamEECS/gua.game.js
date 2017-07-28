@@ -1,4 +1,4 @@
-var levels = [
+var initLevels = [
     [
         [0, 0,],
     ],
