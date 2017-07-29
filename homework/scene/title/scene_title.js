@@ -12,6 +12,7 @@ class SceneTitle extends GuaScene {
     }
     draw() {
         // draw labels
+        this.game.context.fillStyle = "#554"
         this.game.context.fillText('按 k 开始游戏', 150, 120)
         this.game.context.fillText('按 b 编辑关卡', 150, 150)
     }

@@ -13,6 +13,7 @@ class GuaGame {
         // events
         var self = this
         window.addEventListener('keydown', event => {
+            log('press:', event.key)
             this.keydowns[event.key] = true
         })
         window.addEventListener('keyup', function(event){
@@ -41,7 +42,7 @@ class GuaGame {
         this.actions[key] = callback
     }
     runloop() {
-        log(window.fps)
+        // log(window.fps)
         // events
         var g = this
         var actions = Object.keys(g.actions)
@@ -65,7 +66,7 @@ class GuaGame {
     }
     imageByName(name) {
         var g = this
-        log('image by name', g.images)
+        // log('image by name', g.images)
         var img = g.images[name]
         var image = {
             w: img.width,
@@ -104,9 +105,9 @@ class GuaGame {
                 g.images[name] = img
                 // 所有图片都成功载入之后, 调用 run
                 loads.push(1)
-                log('load images', loads.length, names.length)
+                // log('load images', loads.length, names.length)
                 if (loads.length == names.length) {
-                    log('load images', g.images)
+                    // log('load images', g.images)
                     g.__start()
                 }
             }

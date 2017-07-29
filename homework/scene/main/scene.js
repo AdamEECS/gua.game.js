@@ -37,7 +37,9 @@ var Scene = function(game) {
             }
         }
         // draw labels
+        game.context.fillStyle = "#fff"
         game.context.fillText('分数: ' + score, 10, 290)
+        game.context.fillText('关卡 ' + game.scene.level, 350, 290)
     }
     s.update = function() {
         if (window.paused) {
@@ -74,7 +76,7 @@ var Scene = function(game) {
     game.canvas.addEventListener('mousedown', function(event) {
         var x = event.offsetX
         var y = event.offsetY
-        log(x, y, event)
+        // log(x, y, event)
         // 检查是否点中了 ball
         if (ball.hasPoint(x, y)) {
             // 设置拖拽状态
@@ -86,7 +88,7 @@ var Scene = function(game) {
         var y = event.offsetY
         // log(x, y, 'move')
         if (enableDrag) {
-            log(x, y, 'drag')
+            // log(x, y, 'drag')
             ball.x = x
             ball.y = y
         }
@@ -94,7 +96,7 @@ var Scene = function(game) {
     game.canvas.addEventListener('mouseup', function(event) {
         var x = event.offsetX
         var y = event.offsetY
-        log(x, y, 'up')
+        // log(x, y, 'up')
         enableDrag = false
     })
 
@@ -112,6 +114,43 @@ var SceneEditor = function(game) {
 
     s.blocks = loadLevel(game, 1)
 
+    game.registerAction('r', function(){
+        var s = SceneTitle.new(game)
+        game.replaceScene(s)
+    })
+
+    window.addEventListener('keypress', event => {
+        // log('press:', event.key)
+        if (event.key === '=') {
+            s.addBlock()
+        } else if (event.key === '-') {
+            s.subBlock()
+        }
+        event.stopImmediatePropagation();
+    })
+
+    s.addBlock = function() {
+        var levels = loadLevelsFromDb()
+        var level = game.scene.level - 1
+        // log('before add', level, levels[level])
+        levels[level].push([0, 0])
+        // log('after add', level, levels[level])
+        localStorage.levels = JSON.stringify(levels)
+
+        game.scene.blocks = loadLevel(game, game.scene.level)
+    }
+
+    s.subBlock = function() {
+        var levels = loadLevelsFromDb()
+        var level = game.scene.level - 1
+        // log('before sub', level, levels[level])
+        levels[level].pop()
+        // log('after sub', level, levels[level])
+        localStorage.levels = JSON.stringify(levels)
+
+        game.scene.blocks = loadLevel(game, game.scene.level)
+    }
+
     s.draw = function() {
         // draw 背景
         game.context.fillStyle = "#554"
@@ -125,7 +164,13 @@ var SceneEditor = function(game) {
             }
         }
         // draw labels
-        game.context.fillText('分数: ' + score, 10, 290)
+        game.context.fillStyle = "#fff"
+        game.context.fillText('[=] 增加砖块  [-] 删除砖块  [r] 返回主界面', 10, 290)
+        game.context.globalAlpha=0.1;
+        game.context.font='80px Arial';
+        game.context.fillText('关卡 ' + game.scene.level, 80, 180)
+        game.context.font='10px Arial';
+        game.context.globalAlpha=1;
     }
     s.update = function() {
 
@@ -133,11 +178,11 @@ var SceneEditor = function(game) {
 
     // mouse event
     var enableDrag = false
-    var draggingBlock = 0
+    var draggingBlock
     game.canvas.addEventListener('mousedown', function(event) {
         var x = event.offsetX
         var y = event.offsetY
-        log(x, y, event)
+        // log(x, y, event)
         // 检查是否点中了 ball
         for (var i = 0; i < s.blocks.length; i++) {
             var block = s.blocks[i]
@@ -145,6 +190,7 @@ var SceneEditor = function(game) {
                 // 设置拖拽状态
                 enableDrag = true
                 draggingBlock = i
+                // log('dragging', draggingBlock)
                 break
             }
         }
@@ -154,8 +200,8 @@ var SceneEditor = function(game) {
         var x = event.offsetX
         var y = event.offsetY
         // log(x, y, 'move')
-        if (enableDrag) {
-            log(x, y, 'drag', draggingBlock)
+        if (enableDrag && draggingBlock !== undefined) {
+            // log(x, y, 'drag', draggingBlock)
             var block = s.blocks[draggingBlock]
             block.x = x
             block.y = y
@@ -165,11 +211,13 @@ var SceneEditor = function(game) {
         var x = event.offsetX
         var y = event.offsetY
 
-        if (enableDrag) {
-            saveLevelsToDb(s.level, draggingBlock, x, y)
+        if (enableDrag && draggingBlock !== undefined) {
+            // log('mouseup', game.scene.level, draggingBlock, x, y)
+            saveLevelsToDb(game.scene.level, draggingBlock, x, y)
         }
 
         enableDrag = false
+        draggingBlock = undefined
     })
 
     return s
